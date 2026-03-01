@@ -105,12 +105,12 @@ export const Login = () => {
 
             <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-5 gap-12 p-6 items-center">
                 {/* Left Side - Branding */}
-                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
-                    <div className="flex flex-col items-start justify-center space-y-2">
-                        <div className="relative group -ml-4">
+                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center animate-fade-in pl-8">
+                    <div className="flex flex-col items-start justify-center">
+                        <div className="relative group -ml-4 -mb-4">
                             <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
                             <div className="relative w-48 h-48 flex items-center justify-center">
-                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md scale-125" />
                             </div>
                         </div>
 
