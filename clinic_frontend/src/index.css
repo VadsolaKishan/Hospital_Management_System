@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Calm Professional Theme */
+
+    /* Backgrounds: Soft Pearl Gray */
+    --background: 210 20% 96%;
+    /* Pearl/Cloud Gray */
+    --foreground: 220 15% 20%;
+    /* Charcoal Gray */
+
+    /* Cards: Warm White */
+    --card: 40 10% 99%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 40 10% 99%;
+    --popover-foreground: 220 15% 20%;
+
+    /* Primary: Dusty Blue-Gray / Indigo Accent */
+    --primary: 225 30% 35%;
+    /* Dusty Blue-Gray Base */
+    --primary-foreground: 0 0% 100%;
+
+    /* Detailed interactions use Deep Indigo */
+
+    /* Secondary: Cool Pearl */
+    --secondary: 210 20% 90%;
+    --secondary-foreground: 220 15% 20%;
+
+    /* Muted Text */
+    --muted: 210 20% 92%;
+    --muted-foreground: 220 10% 55%;
+    /* Cool Gray */
+
+    /* Accent: Deep Indigo */
+    --accent: 235 40% 95%;
+    /* Light Indigo Wash */
+    --accent-foreground: 235 50% 40%;
+    /* Deep Indigo Text */
+
+    /* Status Colors (Muted/Professional) */
+    --destructive: 0 40% 60%;
+    /* Slate Red */
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 150 70% 30%;
+    /* Dark Emerald */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 40 60% 60%;
+    /* Muted Gold */
+    --warning-foreground: 0 0% 98%;
+
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
+    --ring: 235 50% 40%;
+    /* Indigo Ring */
+
+    --radius: 0.75rem;
+
+    /* Custom Palette Mapping */
+    --clinic-charcoal: 220 15% 20%;
+    --clinic-pearl: 210 20% 96%;
+    --clinic-indigo: 235 50% 40%;
+    --clinic-mint: 150 70% 30%;
+    --clinic-slate-red: 0 40% 60%;
+    --clinic-gold: 40 60% 60%;
+
+    /* Shadows - Soft elevation */
+    --shadow-sm: 0 1px 2px 0 hsl(220 15% 90%);
+    --shadow-md: 0 4px 12px -2px hsl(220 15% 85%);
+    --shadow-lg: 0 10px 20px -3px hsl(220 15% 85%);
+
+    /* Sidebar: Dusty Blue-Gray */
+    --sidebar-background: 225 35% 25%;
+    /* Slightly richer sidebar */
+    --sidebar-foreground: 210 20% 96%;
+    --sidebar-primary: 235 60% 60%;
+    /* Lighter Indigo for highlights */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 225 30% 30%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 225 25% 25%;
+    --sidebar-ring: 235 60% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(235 50% 40%) 0%, hsl(225 30% 35%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(150 70% 30%) 0%, hsl(150 60% 40%) 100%);
+  }
+
+  .dark {
+    /* Dark Mode: Deep Calming Tones */
+    --background: 215 20% 12%;
+    --foreground: 40 10% 90%;
+
+    --card: 215 20% 15%;
+    --card-foreground: 40 10% 90%;
+
+    --popover: 215 20% 15%;
+    --popover-foreground: 40 10% 90%;
+
+    --primary: 175 40% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 20% 20%;
+    --secondary-foreground: 40 10% 90%;
+
+    --muted: 215 20% 20%;
+    --muted-foreground: 215 10% 60%;
+
+    --accent: 215 20% 20%;
+    --accent-foreground: 40 10% 90%;
+
+    --destructive: 0 60% 65%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 20% 25%;
+    --input: 215 20% 25%;
+    --ring: 175 40% 50%;
+
+    --sidebar-background: 215 20% 10%;
+    --sidebar-foreground: 40 10% 90%;
+    --sidebar-primary: 175 40% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 20% 18%;
+    --sidebar-accent-foreground: 40 10% 90%;
+    --sidebar-border: 215 20% 20%;
+    --sidebar-ring: 175 40% 50%;
+  }
+}
+
+@layer base {
+
+  html,
+  body,
+  #root {
+    @apply h-full w-full;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card rounded-2xl border border-border/60 shadow-sm transition-all duration-300;
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-text {
+    background: var(--primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-card {
+    @apply bg-card rounded-2xl p-6 border border-border/50 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground font-medium transition-all duration-300 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+  }
+
+  .nav-link.active {
+    @apply bg-sidebar-primary/10 text-sidebar-primary font-semibold border-l-4 border-sidebar-primary rounded-l-none;
+  }
+
+  .btn-gradient {
+    @apply relative overflow-hidden rounded-xl px-6 py-3 font-medium text-white transition-all duration-300 bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground shadow-sm placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+  }
+
+  .table-row {
+    @apply border-b border-border/40 transition-colors hover:bg-muted/30;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border border-transparent;
+  }
+
+  .badge-pending {
+    @apply bg-warning/15 text-yellow-700 border-warning/20;
+  }
+
+  .badge-approved {
+    @apply bg-success/15 text-emerald-700 border-success/20;
+  }
+
+  .badge-cancelled {
+    @apply bg-destructive/10 text-destructive border-destructive/20;
+  }
+
+  .badge-paid {
+    @apply bg-success/15 text-emerald-700 border-success/20;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold text-foreground;
+  }
+
+  .page-subtitle {
+    @apply text-muted-foreground mt-1;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(217 91% 60% / 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px hsl(217 91% 60% / 0);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 30px -5px var(--tw-shadow-color);
+}
+
+@media print {
+  @page {
+    margin: 20mm;
+    size: auto;
+  }
+
+  /* Only hide everything else IF we have a dedicated print component */
+  body:has(.print-content)>* {
+    visibility: hidden;
+  }
+
+  body:has(.print-content) #root,
+  body:has(.print-content) .print-content,
+  body:has(.print-content) .print-content * {
+    visibility: visible;
+  }
+
+  .print-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide specific elements explicitly just in case */
+  aside,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure text colors are dark for printing */
+  .text-muted-foreground {
+    color: #4b5563 !important;
+  }
+
+  .glass-card {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* Expand any scrollable areas */
+  textarea,
+  .overflow-hidden {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

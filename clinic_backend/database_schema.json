@@ -1,0 +1,179 @@
+{
+  "database_name": "clinic_management_system",
+  "tables": {
+    "users": {
+      "fields": {
+        "id": "AutoField",
+        "email": "EmailField",
+        "password": "CharField",
+        "first_name": "CharField",
+        "last_name": "CharField",
+        "phone": "CharField",
+        "role": "CharField",
+        "is_active": "BooleanField",
+        "is_staff": "BooleanField",
+        "is_superuser": "BooleanField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    },
+    "password_reset_tokens": {
+      "fields": {
+        "id": "AutoField",
+        "user_id": "ForeignKey",
+        "token": "UUIDField",
+        "created_at": "DateTimeField",
+        "expires_at": "DateTimeField",
+        "is_used": "BooleanField"
+      }
+    },
+    "patients": {
+      "fields": {
+        "id": "AutoField",
+        "user_id": "OneToOneField",
+        "date_of_birth": "DateField",
+        "gender": "CharField",
+        "blood_group": "CharField",
+        "address": "TextField",
+        "emergency_contact": "CharField",
+        "medical_history": "TextField",
+        "allergies": "TextField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    },
+    "departments": {
+      "fields": {
+        "id": "AutoField",
+        "name": "CharField",
+        "description": "TextField",
+        "created_at": "DateTimeField"
+      },
+      "indexes": [
+        "name"
+      ],
+      "unique_constraints": [
+        "name"
+      ]
+    },
+    "doctors": {
+      "fields": {
+        "id": "AutoField",
+        "user_id": "OneToOneField",
+        "department_id": "ForeignKey",
+        "specialization": "CharField",
+        "qualification": "CharField",
+        "experience_years": "IntegerField",
+        "consultation_fee": "DecimalField",
+        "license_number": "CharField",
+        "bio": "TextField",
+        "is_available": "BooleanField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      },
+      "relationships": {
+        "user": "OneToOne",
+        "department": "ForeignKey(Department)"
+      },
+      "indexes": [
+        "user_id",
+        "department_id",
+        "is_available",
+        "specialization"
+      ],
+      "unique_constraints": [
+        "user_id",
+        "license_number"
+      ]
+    },
+    "doctor_slots": {
+      "fields": {
+        "id": "AutoField",
+        "doctor_id": "ForeignKey",
+        "weekday": "CharField",
+        "start_time": "TimeField",
+        "end_time": "TimeField",
+        "is_active": "BooleanField",
+        "created_at": "DateTimeField"
+      },
+      "relationships": {
+        "doctor": "ForeignKey(Doctor)"
+      },
+      "indexes": [
+        "doctor_id",
+        "weekday",
+        "is_active"
+      ],
+      "unique_constraints": [
+        "doctor_id",
+        "weekday",
+        "start_time"
+      ]
+    },
+    "appointments": {
+      "fields": {
+        "id": "AutoField",
+        "patient_id": "ForeignKey",
+        "doctor_id": "ForeignKey",
+        "appointment_date": "DateField",
+        "appointment_time": "TimeField",
+        "reason": "TextField",
+        "status": "CharField",
+        "notes": "TextField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    },
+    "prescriptions": {
+      "fields": {
+        "id": "AutoField",
+        "appointment_id": "ForeignKey",
+        "patient_id": "ForeignKey",
+        "doctor_id": "ForeignKey",
+        "diagnosis": "TextField",
+        "medications": "TextField",
+        "instructions": "TextField",
+        "follow_up_date": "DateField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    },
+    "billing": {
+      "fields": {
+        "id": "AutoField",
+        "appointment_id": "OneToOneField",
+        "patient_id": "ForeignKey",
+        "total_amount": "DecimalField",
+        "paid_amount": "DecimalField",
+        "payment_status": "CharField",
+        "payment_method": "CharField",
+        "invoice_number": "CharField",
+        "notes": "TextField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    },
+    "notifications": {
+      "fields": {
+        "id": "AutoField",
+        "user_id": "ForeignKey",
+        "title": "CharField",
+        "message": "TextField",
+        "is_read": "BooleanField",
+        "created_at": "DateTimeField"
+      }
+    },
+    "queries": {
+      "fields": {
+        "id": "AutoField",
+        "user_id": "ForeignKey",
+        "subject": "CharField",
+        "message": "TextField",
+        "status": "CharField",
+        "admin_reply": "TextField",
+        "created_at": "DateTimeField",
+        "updated_at": "DateTimeField"
+      }
+    }
+  }
+}
