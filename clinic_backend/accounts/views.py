@@ -277,9 +277,12 @@ Best regards,
 Hospital Management System
 '''
                 
-                # Send email directly synchronously to ensure Gunicorn/Waitress doesn't kill the thread early 
-                # causing silent failure of delivery in Render deployment
-                send_email_async(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                # Sending email in a background thread to prevent Render's firewall from hanging the request.
+                # Render silently blocks port 587 on Free Tiers, causing TCP timeouts which drop CORS headers.
+                Thread(
+                    target=send_email_async,
+                    args=(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                ).start()
                 
                 return Response({
                     'message': 'Password reset link has been sent to your email'
