@@ -232,36 +232,37 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Request password reset - generates token and sends email
         """
-        serializer = ForgotPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                # Return success to prevent email enumeration
-                return Response({
-                    'message': 'Password reset link has been sent to your email'
-                }, status=status.HTTP_200_OK)
-            
-            # Delete existing token if any
-            PasswordResetToken.objects.filter(user=user).delete()
-            
-            # Generate new token
-            token = PasswordResetToken.generate_token()
-            expiration_time = timezone.now() + timedelta(hours=settings.PASSWORD_RESET_TOKEN_EXPIRATION_HOURS)
-            
-            reset_token = PasswordResetToken.objects.create(
-                user=user,
-                token=token,
-                expires_at=expiration_time
-            )
-            
-            # Create reset link
-            reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
-            
-            # Prepare email
-            subject = 'Password Reset Request'
-            message = f'''
+        try:
+            serializer = ForgotPasswordSerializer(data=request.data)
+            if serializer.is_valid():
+                email = serializer.validated_data['email']
+                try:
+                    user = User.objects.get(email=email)
+                except User.DoesNotExist:
+                    # Return success to prevent email enumeration
+                    return Response({
+                        'message': 'Password reset link has been sent to your email'
+                    }, status=status.HTTP_200_OK)
+                
+                # Delete existing token if any
+                PasswordResetToken.objects.filter(user=user).delete()
+                
+                # Generate new token
+                token = PasswordResetToken.generate_token()
+                expiration_time = timezone.now() + timedelta(hours=settings.PASSWORD_RESET_TOKEN_EXPIRATION_HOURS)
+                
+                reset_token = PasswordResetToken.objects.create(
+                    user=user,
+                    token=token,
+                    expires_at=expiration_time
+                )
+                
+                # Create reset link
+                reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+                
+                # Prepare email
+                subject = 'Password Reset Request'
+                message = f'''
 Hello {user.first_name},
 
 You have requested to reset your password. Please click the link below to proceed:
@@ -274,21 +275,24 @@ If you did not request this, please ignore this email.
 
 Best regards,
 Hospital Management System
-            '''
-            
-            # Send email synchronously to avoid deployment background thread issues
-            send_email_async(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-            
-            # Return success immediately without waiting for email to complete
+'''
+                
+                # Send email asynchronously to prevent Render 30s timeout blocking the response
+                Thread(
+                    target=send_email_async,
+                    args=(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                ).start()
+                
+                return Response({
+                    'message': 'Password reset link has been sent to your email'
+                }, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # Prevent 500 error from stripping CORS headers
+            print(f"Forgot password error: {str(e)}")
             return Response({
                 'message': 'Password reset link has been sent to your email'
             }, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
-    def verify_reset_token(self, request):
-        """
         Verify if reset token is valid
         """
         serializer = VerifyResetTokenSerializer(data=request.data)

@@ -315,8 +315,18 @@
 
 @media print {
   @page {
-    margin: 20mm;
-    size: auto;
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    /* Force background to be white and remove scrollbars */
+    background: white !important;
+    overflow: hidden !important; 
   }
 
   /* Only hide everything else IF we have a dedicated print component */
@@ -334,13 +344,21 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 210mm !important;
+    max-height: 297mm !important;
     margin: 0;
-    padding: 20mm !important;
+    padding: 15mm !important; /* Internal padding so text doesn't touch the border */
     background: white;
     box-shadow: none !important;
     border: 2px solid #000 !important;
     box-sizing: border-box;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Prevent random breaks inside rows */
+  tr, td, th, p, div {
+    page-break-inside: avoid !important;
   }
 
   /* Hide specific elements explicitly just in case */
