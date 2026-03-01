@@ -58,7 +58,7 @@ export const Login = () => {
             await login(formData.email, formData.password);
             toast({
                 title: 'Welcome Back!',
-                description: 'Successfully logged in to Velora Care.',
+                description: 'Successfully logged in to HealthCare Pro.',
             });
             navigate('/dashboard');
         } catch (error: any) {
@@ -105,12 +105,12 @@ export const Login = () => {
 
             <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-5 gap-12 p-6 items-center">
                 {/* Left Side - Branding */}
-                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center animate-fade-in pl-8">
-                    <div className="flex flex-col items-start justify-center">
-                        <div className="relative group -ml-4 -mb-4">
-                            <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                            <div className="relative w-48 h-48 flex items-center justify-center">
-                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md scale-125" />
+                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
+                    <div className="flex flex-col items-start justify-center space-y-6">
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-primary blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
+                            <div className="relative w-24 h-24 bg-white rounded-2xl border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/10 overflow-hidden p-2">
+                                <img src="/logo.png" alt="HealthCare Pro Logo" className="w-full h-full object-contain" />
                             </div>
                         </div>
 
@@ -152,16 +152,16 @@ export const Login = () => {
                     {/* Glass Card - Light version */}
                     <div className="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-[2rem] shadow-2xl shadow-emerald-900/5 p-8 md:p-10 overflow-hidden ring-1 ring-black/5">
 
-                        <div className="lg:hidden flex flex-col items-center justify-center gap-0 mb-3">
-                            <div className="flex w-32 h-32 items-center justify-center">
-                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                        <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-lg overflow-hidden p-1">
+                                <img src="/logo.png" alt="HealthCare Pro Logo" className="w-full h-full object-contain" />
                             </div>
-                            <h1 className="text-3xl font-bold text-slate-900 text-center -mt-4">Velora Care</h1>
+                            <h1 className="text-xl font-bold text-slate-900">HealthCare Pro</h1>
                         </div>
 
-                        <div className="mb-4 text-center lg:text-left">
+                        <div className="mb-8 text-center lg:text-left">
                             <h2 className="text-2xl font-bold text-slate-900">Sign In</h2>
-                            <p className="text-slate-500 mt-1 text-sm">Welcome back to Velora Care</p>
+                            <p className="text-slate-500 mt-1 text-sm">Welcome back to HealthCare Pro</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-5">

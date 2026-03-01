@@ -52,19 +52,11 @@ export const InvoicePrint = () => {
         <div className="bg-white min-h-screen text-black p-8 max-w-[210mm] mx-auto print-content">
             {/* Header */}
             <div className="flex justify-between items-start border-b border-gray-300 pb-6 mb-8">
-                <div className="flex items-center gap-4">
-                    {/* Real Logo */}
-                    <img 
-                        src="/logo.png" 
-                        alt="Velora Care Logo" 
-                        className="h-16 w-auto object-contain"
-                    />
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">INVOICE</h1>
-                        <p className="text-gray-600 mt-2 font-semibold">Velora Care</p>
-                        <p className="text-sm text-gray-500">123 Health Street, Medicity</p>
-                        <p className="text-sm text-gray-500">Phone: +1 234 567 890</p>
-                    </div>
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900">INVOICE</h1>
+                    <p className="text-gray-600 mt-2">Hospital Management System</p>
+                    <p className="text-sm text-gray-500">123 Health Street, Medicity</p>
+                    <p className="text-sm text-gray-500">Phone: +1 234 567 890</p>
                 </div>
                 <div className="text-right">
                     <h2 className="text-xl font-semibold text-gray-800">#{bill.invoice_number}</h2>

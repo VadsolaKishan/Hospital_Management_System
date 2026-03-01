@@ -77,7 +77,7 @@ export const Register = () => {
       await register(formData);
       toast({
         title: 'Account Created!',
-        description: 'Welcome to Velora Care. Your account has been created successfully.',
+        description: 'Welcome to HealthCare Pro. Your account has been created successfully.',
       });
       navigate('/dashboard');
     } catch (error: any) {
@@ -127,17 +127,17 @@ export const Register = () => {
 
       <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-5 gap-12 p-6 items-center">
         {/* Left Side - Branding */}
-        <div className="hidden lg:flex lg:col-span-2 flex-col justify-center animate-fade-in pl-8">
-          <div className="flex flex-col items-start justify-center">
-            <div className="relative group -ml-4 -mb-4">
-                <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                <div className="relative w-48 h-48 flex items-center justify-center">
-                    <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md scale-125" />
-                </div>
+        <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
+          <div className="flex flex-col items-start justify-center space-y-6">
+            <div className="relative group">
+                <div className="absolute inset-0 bg-primary blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
+                <div className="relative w-24 h-24 bg-white rounded-2xl border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/10 overflow-hidden p-2">
+                    <img src="/logo.png" alt="HealthCare Pro Logo" className="w-full h-full object-contain" />
             </div>
+
             <div>
               <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-3 leading-tight">
-                Join <span className="text-emerald-600">Velora Care</span> <br />
+                Join <span className="text-emerald-600">HealthCare Pro</span> <br />
                 <span className="text-2xl font-normal text-slate-500">Advanced Medical Care</span>
               </h1>
               <p className="text-slate-600 text-lg max-w-sm mt-2 leading-relaxed font-medium">
@@ -173,14 +173,7 @@ export const Register = () => {
           {/* Glass Card - Light version */}
           <div className="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-[2rem] shadow-2xl shadow-emerald-900/5 p-8 md:p-10 overflow-hidden ring-1 ring-black/5">
 
-            <div className="lg:hidden flex flex-col items-center justify-center gap-0 mb-3">
-                <div className="flex w-32 h-32 items-center justify-center">
-                    <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
-                </div>
-                <h1 className="text-3xl font-bold text-slate-900 text-center -mt-4">Velora Care</h1>
-            </div>
-
-            <div className="mb-4 text-center lg:text-left">
+            <div className="mb-8 text-center lg:text-left">
               <h2 className="text-2xl font-bold text-slate-900">Create Account</h2>
               <p className="text-slate-500 mt-1 text-sm bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200">
                 Get started with your free account
