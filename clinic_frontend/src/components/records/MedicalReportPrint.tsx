@@ -42,7 +42,7 @@ export const MedicalReportPrint = () => {
     );
 
     return (
-        <div className="bg-white min-h-screen text-black p-8 max-w-[210mm] mx-auto font-sans">
+        <div className="bg-white min-h-screen text-black p-8 max-w-[210mm] mx-auto font-sans print-content">
             {/* Header */}
             <div className="flex justify-between items-start border-b-2 border-primary/20 pb-6 mb-8">
                 <div className="flex items-center gap-4">

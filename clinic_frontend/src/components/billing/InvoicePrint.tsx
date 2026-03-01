@@ -49,7 +49,7 @@ export const InvoicePrint = () => {
         : bill.total_amount; // Fallback
 
     return (
-        <div className="bg-white min-h-screen text-black p-8 max-w-[210mm] mx-auto">
+        <div className="bg-white min-h-screen text-black p-8 max-w-[210mm] mx-auto print-content">
             {/* Header */}
             <div className="flex justify-between items-start border-b border-gray-300 pb-6 mb-8">
                 <div>

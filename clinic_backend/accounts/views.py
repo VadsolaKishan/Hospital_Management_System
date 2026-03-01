@@ -270,13 +270,8 @@ Best regards,
 Hospital Management System
             '''
             
-            # Send email asynchronously in background thread
-            email_thread = Thread(
-                target=send_email_async,
-                args=(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-            )
-            email_thread.daemon = True
-            email_thread.start()
+            # Send email synchronously to avoid deployment background thread issues
+            send_email_async(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
             
             # Return success immediately without waiting for email to complete
             return Response({
