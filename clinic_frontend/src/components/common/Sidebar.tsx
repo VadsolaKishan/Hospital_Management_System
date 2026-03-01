@@ -117,7 +117,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobile = false }: SidebarProps) =>
           <div className="flex h-20 items-center justify-between border-b border-border px-4 py-2">
             <div className="flex items-center gap-3">
               <div className="flex h-16 w-16 items-center justify-center">
-                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-sm" />
+                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-sm" />
             </div>
             {isOpen && (
               <div className="animate-fade-in">

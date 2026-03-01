@@ -110,7 +110,7 @@ export const Login = () => {
                         <div className="relative group">
                             <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
                             <div className="relative w-36 h-36 flex items-center justify-center">
-                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
                             </div>
                         </div>
 
@@ -154,7 +154,7 @@ export const Login = () => {
 
                         <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
                             <div className="flex w-20 h-20 items-center justify-center">
-                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                                <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
                             </div>
                             <h1 className="text-2xl font-bold text-slate-900">Velora Care</h1>
                         </div>

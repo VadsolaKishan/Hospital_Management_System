@@ -55,7 +55,7 @@ export const InvoicePrint = () => {
                 <div className="flex items-center gap-4">
                     {/* Real Logo */}
                     <img 
-                        src="/images/logo.png" 
+                        src="/logo.png" 
                         alt="Velora Care Logo" 
                         className="h-16 w-auto object-contain"
                     />
