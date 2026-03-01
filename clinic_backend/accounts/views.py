@@ -277,11 +277,9 @@ Best regards,
 Hospital Management System
 '''
                 
-                # Send email asynchronously to prevent Render 30s timeout blocking the response
-                Thread(
-                    target=send_email_async,
-                    args=(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-                ).start()
+                # Send email directly synchronously to ensure Gunicorn/Waitress doesn't kill the thread early 
+                # causing silent failure of delivery in Render deployment
+                send_email_async(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
                 
                 return Response({
                     'message': 'Password reset link has been sent to your email'
