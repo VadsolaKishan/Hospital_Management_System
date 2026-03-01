@@ -108,16 +108,16 @@ export const Login = () => {
                 <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
                     <div className="flex flex-col items-start justify-center space-y-6">
                         <div className="relative group">
-                            <div className="absolute inset-0 bg-primary blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                            <div className="relative w-24 h-24 bg-white rounded-2xl border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/10 overflow-hidden p-2">
-                                <img src="/logo.png" alt="HealthCare Pro Logo" className="w-full h-full object-contain" />
+                            <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
+                            <div className="relative w-20 h-20 bg-white rounded-2xl border border-emerald-100 flex items-center justify-center shadow-lg shadow-emerald-100/50">
+                                <HeartPulse className="w-10 h-10 text-emerald-500" />
                             </div>
                         </div>
 
                         <div>
                             <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-3 leading-tight">
                                 Welcome <br />
-                                <span className="text-primary">Back</span>
+                                <span className="text-emerald-600">Back</span>
                             </h1>
                             <p className="text-slate-600 text-lg max-w-sm mt-2 leading-relaxed font-medium">
                                 Access your dashboard to manage appointments, patients, and medical records.
@@ -153,8 +153,8 @@ export const Login = () => {
                     <div className="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-[2rem] shadow-2xl shadow-emerald-900/5 p-8 md:p-10 overflow-hidden ring-1 ring-black/5">
 
                         <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-lg overflow-hidden p-1">
-                                <img src="/logo.png" alt="HealthCare Pro Logo" className="w-full h-full object-contain" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/20">
+                                <Activity className="h-5 w-5" />
                             </div>
                             <h1 className="text-xl font-bold text-slate-900">HealthCare Pro</h1>
                         </div>
