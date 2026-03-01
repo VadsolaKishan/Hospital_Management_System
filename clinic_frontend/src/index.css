@@ -336,10 +336,11 @@
     top: 0;
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 20mm !important;
     background: white;
     box-shadow: none !important;
-    border: none !important;
+    border: 2px solid #000 !important;
+    box-sizing: border-box;
   }
 
   /* Hide specific elements explicitly just in case */
