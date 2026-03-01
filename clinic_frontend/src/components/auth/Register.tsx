@@ -128,10 +128,10 @@ export const Register = () => {
       <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-5 gap-12 p-6 items-center">
         {/* Left Side - Branding */}
         <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
-          <div className="flex flex-col items-start justify-center space-y-6">
-            <div className="relative group">
+          <div className="flex flex-col items-start justify-center space-y-2">
+            <div className="relative group -ml-4">
                 <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                <div className="relative w-36 h-36 flex items-center justify-center">
+                <div className="relative w-48 h-48 flex items-center justify-center">
                     <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
                 </div>
             </div>
@@ -173,7 +173,14 @@ export const Register = () => {
           {/* Glass Card - Light version */}
           <div className="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-[2rem] shadow-2xl shadow-emerald-900/5 p-8 md:p-10 overflow-hidden ring-1 ring-black/5">
 
-            <div className="mb-8 text-center lg:text-left">
+            <div className="lg:hidden flex flex-col items-center justify-center gap-0 mb-3">
+                <div className="flex w-32 h-32 items-center justify-center">
+                    <img src="/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                </div>
+                <h1 className="text-3xl font-bold text-slate-900 text-center -mt-4">Velora Care</h1>
+            </div>
+
+            <div className="mb-4 text-center lg:text-left">
               <h2 className="text-2xl font-bold text-slate-900">Create Account</h2>
               <p className="text-slate-500 mt-1 text-sm bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200">
                 Get started with your free account
