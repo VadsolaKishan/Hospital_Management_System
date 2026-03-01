@@ -293,6 +293,10 @@ Hospital Management System
             return Response({
                 'message': 'Password reset link has been sent to your email'
             }, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def verify_reset_token(self, request):
+        """
         Verify if reset token is valid
         """
         serializer = VerifyResetTokenSerializer(data=request.data)
