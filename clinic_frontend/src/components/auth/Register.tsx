@@ -130,10 +130,11 @@ export const Register = () => {
         <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
           <div className="flex flex-col items-start justify-center space-y-6">
             <div className="relative group">
-                <div className="absolute inset-0 bg-primary blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                <div className="relative w-24 h-24 bg-white rounded-2xl border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/10 overflow-hidden p-2">
-                    <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain" />
-            </div>              </div>
+                <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
+                <div className="relative w-36 h-36 flex items-center justify-center">
+                    <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
+                </div>
+            </div>
             <div>
               <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-3 leading-tight">
                 Join <span className="text-emerald-600">Velora Care</span> <br />

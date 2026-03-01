@@ -108,9 +108,9 @@ export const Login = () => {
                 <div className="hidden lg:flex lg:col-span-2 flex-col justify-center space-y-8 animate-fade-in pl-8">
                     <div className="flex flex-col items-start justify-center space-y-6">
                         <div className="relative group">
-                            <div className="absolute inset-0 bg-primary blur-xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
-                            <div className="relative w-24 h-24 bg-white rounded-2xl border border-primary/20 flex items-center justify-center shadow-lg shadow-primary/10 overflow-hidden p-2">
-                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain" />
+                            <div className="absolute inset-0 bg-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-full" />
+                            <div className="relative w-36 h-36 flex items-center justify-center">
+                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
                             </div>
                         </div>
 
@@ -152,11 +152,11 @@ export const Login = () => {
                     {/* Glass Card - Light version */}
                     <div className="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-[2rem] shadow-2xl shadow-emerald-900/5 p-8 md:p-10 overflow-hidden ring-1 ring-black/5">
 
-                        <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-lg overflow-hidden p-1">
-                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain" />
+                        <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
+                            <div className="flex w-20 h-20 items-center justify-center">
+                                <img src="/images/logo.png" alt="Velora Care Logo" className="w-full h-full object-contain drop-shadow-md" />
                             </div>
-                            <h1 className="text-xl font-bold text-slate-900">Velora Care</h1>
+                            <h1 className="text-2xl font-bold text-slate-900">Velora Care</h1>
                         </div>
 
                         <div className="mb-8 text-center lg:text-left">
