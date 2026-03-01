@@ -235,7 +235,13 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            user = User.objects.get(email=email)
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                # Return success to prevent email enumeration
+                return Response({
+                    'message': 'Password reset link has been sent to your email'
+                }, status=status.HTTP_200_OK)
             
             # Delete existing token if any
             PasswordResetToken.objects.filter(user=user).delete()
