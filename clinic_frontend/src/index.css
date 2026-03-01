@@ -345,16 +345,29 @@
     left: 0;
     top: 0;
     width: 210mm !important;
-    max-height: 297mm !important;
+    height: 297mm !important;
     margin: 0;
-    padding: 15mm !important; /* Internal padding so text doesn't touch the border */
+    padding: 10mm !important;
     background: white;
     box-shadow: none !important;
     border: 2px solid #000 !important;
     box-sizing: border-box;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
+    /* SCALE TRICK: if it goes slightly over, zoom out to fit the one page */
+    transform-origin: top left;
+    overflow: hidden;
   }
+
+  /* Target everything inside to shrink slightly on mobile / avoid huge font sizes pushing boundaries */
+  .print-content * {
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+  }
+  
+  .print-content h1 { font-size: 16pt !important; }
+  .print-content h2 { font-size: 14pt !important; }
+  .print-content h3 { font-size: 12pt !important; }
 
   /* Prevent random breaks inside rows */
   tr, td, th, p, div {
