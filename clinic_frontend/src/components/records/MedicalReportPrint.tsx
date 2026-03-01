@@ -46,12 +46,14 @@ export const MedicalReportPrint = () => {
             {/* Header */}
             <div className="flex justify-between items-start border-b-2 border-primary/20 pb-6 mb-8">
                 <div className="flex items-center gap-4">
-                    {/* Logo Placeholder */}
-                    <div className="bg-primary text-white h-16 w-16 flex items-center justify-center rounded-lg text-2xl font-bold">
-                        H
-                    </div>
+                    {/* Real Logo */}
+                    <img 
+                        src="/images/logo.png" 
+                        alt="Velora Care Logo" 
+                        className="h-16 w-auto object-contain"
+                    />
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">HealthCare Pro</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">Velora Care</h1>
                         <p className="text-sm text-gray-500">123 Health Street, Medicity</p>
                         <p className="text-sm text-gray-500">Phone: +1 234 567 890</p>
                     </div>

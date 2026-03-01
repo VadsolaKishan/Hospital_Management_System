@@ -87,7 +87,7 @@ export const DoctorList = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Doctors</h1>
-          <p className="text-muted-foreground">Browse and find healthcare professionals</p>
+          <p className="text-muted-foreground">Browse and find Velora Carefessionals</p>
         </div>
         {canManage && (
           <button onClick={() => setShowNewModal(true)} className="btn-gradient flex items-center gap-2">

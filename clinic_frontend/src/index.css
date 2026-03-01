@@ -6,32 +6,26 @@
 
 @layer base {
   :root {
-    /* Calm Professional Theme */
+      /* Velora Care Theme - Inspired by Teal and Gold Logo */
 
-    /* Backgrounds: Soft Pearl Gray */
-    --background: 210 20% 96%;
-    /* Pearl/Cloud Gray */
-    --foreground: 220 15% 20%;
-    /* Charcoal Gray */
+      /* Backgrounds: Soft Pearl Gray */
+      --background: 210 20% 96%;
+      --foreground: 180 50% 15%; /* Deep Teal text */
 
-    /* Cards: Warm White */
-    --card: 40 10% 99%;
-    --card-foreground: 220 15% 20%;
+      /* Cards: Warm White */
+      --card: 40 10% 99%;
+      --card-foreground: 180 50% 15%;
 
-    --popover: 40 10% 99%;
-    --popover-foreground: 220 15% 20%;
+      --popover: 40 10% 99%;
+      --popover-foreground: 180 50% 15%;
 
-    /* Primary: Dusty Blue-Gray / Indigo Accent */
-    --primary: 225 30% 35%;
-    /* Dusty Blue-Gray Base */
-    --primary-foreground: 0 0% 100%;
+      /* Primary: Teal to match the lotus leaves */
+      --primary: 184 45% 35%; 
+      --primary-foreground: 0 0% 100%;
 
-    /* Detailed interactions use Deep Indigo */
-
-    /* Secondary: Cool Pearl */
-    --secondary: 210 20% 90%;
-    --secondary-foreground: 220 15% 20%;
-
+      /* Secondary: Gold/Bronze to match the DNA helix */
+      --secondary: 42 60% 50%;
+      --secondary-foreground: 0 0% 100%;
     /* Muted Text */
     --muted: 210 20% 92%;
     --muted-foreground: 220 10% 55%;
@@ -158,16 +152,15 @@
   }
 
   .gradient-primary {
-    background: var(--gradient-primary);
-  }
+      background: linear-gradient(135deg, hsl(184 45% 35%) 0%, hsl(184 45% 20%) 100%);
+    }
 
-  .gradient-secondary {
-    background: var(--gradient-secondary);
-  }
+    .gradient-secondary {
+      background: linear-gradient(135deg, hsl(42 60% 50%) 0%, hsl(42 60% 35%) 100%);
+    }
 
-  .gradient-text {
-    background: var(--primary);
-    -webkit-background-clip: text;
+    .gradient-text {
+      background: linear-gradient(135deg, hsl(184 45% 35%) 0%, hsl(42 60% 50%) 100%);
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }

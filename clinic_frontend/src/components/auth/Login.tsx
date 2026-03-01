@@ -58,7 +58,7 @@ export const Login = () => {
             await login(formData.email, formData.password);
             toast({
                 title: 'Welcome Back!',
-                description: 'Successfully logged in to HealthCare Pro.',
+                description: 'Successfully logged in to Velora Care.',
             });
             navigate('/dashboard');
         } catch (error: any) {
@@ -156,12 +156,12 @@ export const Login = () => {
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/20">
                                 <Activity className="h-5 w-5" />
                             </div>
-                            <h1 className="text-xl font-bold text-slate-900">HealthCare Pro</h1>
+                            <h1 className="text-xl font-bold text-slate-900">Velora Care</h1>
                         </div>
 
                         <div className="mb-8 text-center lg:text-left">
                             <h2 className="text-2xl font-bold text-slate-900">Sign In</h2>
-                            <p className="text-slate-500 mt-1 text-sm">Welcome back to HealthCare Pro</p>
+                            <p className="text-slate-500 mt-1 text-sm">Welcome back to Velora Care</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-5">

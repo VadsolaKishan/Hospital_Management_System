@@ -77,7 +77,7 @@ export const Register = () => {
       await register(formData);
       toast({
         title: 'Account Created!',
-        description: 'Welcome to HealthCare Pro. Your account has been created successfully.',
+        description: 'Welcome to Velora Care. Your account has been created successfully.',
       });
       navigate('/dashboard');
     } catch (error: any) {
@@ -138,7 +138,7 @@ export const Register = () => {
 
             <div>
               <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-3 leading-tight">
-                Join <span className="text-emerald-600">HealthCare Pro</span> <br />
+                Join <span className="text-emerald-600">Velora Care</span> <br />
                 <span className="text-2xl font-normal text-slate-500">Advanced Medical Care</span>
               </h1>
               <p className="text-slate-600 text-lg max-w-sm mt-2 leading-relaxed font-medium">
