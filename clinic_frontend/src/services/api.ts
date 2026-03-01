@@ -4,10 +4,16 @@ import axios from 'axios';
 // If on localhost, use localhost:8000
 // If on an IP address, use the same IP with :8000
 const getAPIBaseURL = () => {
+  // Check if we have an environment variable injected by Vite
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
   const hostname = window.location.hostname;
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
     return 'http://localhost:8000/api';
   }
+  
   // For IP addresses or other hosts, use the same IP
   return `http://${hostname}:8000/api`;
 };
