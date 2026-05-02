@@ -145,7 +145,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobile = false }: SidebarProps) =>
             {isOpen && (
               <div className="animate-fade-in text-left">
                 <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Velora Care</h1>
-                <p className="text-xs text-muted-foreground">Hospital Management System</p>
+                <p className="text-xs text-muted-foreground">Management System</p>
               </div>
             )}
           </div>
