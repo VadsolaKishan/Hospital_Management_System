@@ -1,0 +1,306 @@
+{
+  "base_url": "/api",
+  "version": "1.0",
+  "endpoints": {
+    "authentication": {
+      "base": "/accounts/users",
+      "routes": {
+        "register": {
+          "path": "/register/",
+          "method": "POST",
+          "permission": "AllowAny"
+        },
+        "login": {
+          "path": "/login/",
+          "method": "POST",
+          "permission": "AllowAny"
+        },
+        "profile": {
+          "path": "/profile/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "forgot_password": {
+          "path": "/forgot_password/",
+          "method": "POST",
+          "permission": "AllowAny"
+        },
+        "reset_password": {
+          "path": "/reset_password/",
+          "method": "POST",
+          "permission": "AllowAny"
+        },
+        "verify_reset_token": {
+          "path": "/verify_reset_token/",
+          "method": "POST",
+          "permission": "AllowAny"
+        },
+        "block_user": {
+          "path": "/{id}/block_user/",
+          "method": "POST",
+          "permission": "IsAdmin"
+        },
+        "activate_user": {
+          "path": "/{id}/activate_user/",
+          "method": "POST",
+          "permission": "IsAdmin"
+        }
+      }
+    },
+    "patients": {
+      "base": "/patients",
+      "routes": {
+        "list": {
+          "path": "/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "create": {
+          "path": "/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        },
+        "retrieve": {
+          "path": "/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "update": {
+          "path": "/{id}/",
+          "method": "PUT",
+          "permission": "IsAdminOrStaff"
+        },
+        "delete": {
+          "path": "/{id}/",
+          "method": "DELETE",
+          "permission": "IsAdmin"
+        },
+        "my_profile": {
+          "path": "/my_profile/",
+          "method": "GET",
+          "permission": "IsPatient"
+        }
+      }
+    },
+    "doctors": {
+      "base": "/doctors",
+      "routes": {
+        "departments_list": {
+          "path": "/departments/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "departments_create": {
+          "path": "/departments/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        },
+        "departments_retrieve": {
+          "path": "/departments/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "departments_update": {
+          "path": "/departments/{id}/",
+          "method": "PUT",
+          "permission": "IsAdminOrStaff"
+        },
+        "departments_delete": {
+          "path": "/departments/{id}/",
+          "method": "DELETE",
+          "permission": "IsAdmin"
+        },
+        "doctors_list": {
+          "path": "/doctors/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "doctors_create": {
+          "path": "/doctors/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        },
+        "doctors_retrieve": {
+          "path": "/doctors/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "doctors_update": {
+          "path": "/doctors/{id}/",
+          "method": "PUT",
+          "permission": "IsAdminOrStaff"
+        },
+        "doctors_delete": {
+          "path": "/doctors/{id}/",
+          "method": "DELETE",
+          "permission": "IsAdmin"
+        },
+        "available_doctors": {
+          "path": "/doctors/available_doctors/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "available_slots": {
+          "path": "/doctors/{id}/available_slots/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "all_doctor_slots": {
+          "path": "/doctors/{id}/all_slots/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "slots_list": {
+          "path": "/slots/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "slots_create": {
+          "path": "/slots/",
+          "method": "POST",
+          "permission": "IsDoctor"
+        },
+        "slots_retrieve": {
+          "path": "/slots/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "slots_update": {
+          "path": "/slots/{id}/",
+          "method": "PUT",
+          "permission": "IsDoctor"
+        },
+        "slots_delete": {
+          "path": "/slots/{id}/",
+          "method": "DELETE",
+          "permission": "IsDoctor"
+        }
+      }
+    },
+    "appointments": {
+      "base": "/appointments",
+      "routes": {
+        "list": {
+          "path": "/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "create": {
+          "path": "/",
+          "method": "POST",
+          "permission": "IsAuthenticated"
+        },
+        "retrieve": {
+          "path": "/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "update": {
+          "path": "/{id}/",
+          "method": "PUT",
+          "permission": "IsAuthenticated"
+        },
+        "approve": {
+          "path": "/{id}/approve/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        },
+        "cancel": {
+          "path": "/{id}/cancel/",
+          "method": "POST",
+          "permission": "IsAuthenticated"
+        },
+        "upcoming": {
+          "path": "/upcoming/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        }
+      }
+    },
+    "records": {
+      "base": "/records",
+      "routes": {
+        "prescriptions_list": {
+          "path": "/prescriptions/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "prescriptions_create": {
+          "path": "/prescriptions/",
+          "method": "POST",
+          "permission": "IsAdminOrDoctor"
+        },
+        "prescriptions_retrieve": {
+          "path": "/prescriptions/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "my_prescriptions": {
+          "path": "/prescriptions/my_prescriptions/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        }
+      }
+    },
+    "billing": {
+      "base": "/billing",
+      "routes": {
+        "list": {
+          "path": "/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "create": {
+          "path": "/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        },
+        "retrieve": {
+          "path": "/{id}/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "mark_paid": {
+          "path": "/{id}/mark_paid/",
+          "method": "POST",
+          "permission": "IsAdminOrStaff"
+        }
+      }
+    },
+    "support": {
+      "base": "/support",
+      "routes": {
+        "notifications_list": {
+          "path": "/notifications/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "notifications_unread": {
+          "path": "/notifications/unread/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "notifications_mark_read": {
+          "path": "/notifications/{id}/mark_read/",
+          "method": "POST",
+          "permission": "IsAuthenticated"
+        },
+        "queries_list": {
+          "path": "/queries/",
+          "method": "GET",
+          "permission": "IsAuthenticated"
+        },
+        "queries_create": {
+          "path": "/queries/",
+          "method": "POST",
+          "permission": "IsAuthenticated"
+        },
+        "queries_reply": {
+          "path": "/queries/{id}/reply/",
+          "method": "POST",
+          "permission": "IsAdmin"
+        }
+      }
+    }
+  }
+}

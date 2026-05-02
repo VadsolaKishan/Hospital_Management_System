@@ -1,0 +1,119 @@
+{
+  "application": {
+    "name": "HealthCare Pro",
+    "version": "1.0.0",
+    "description": "Clinic Management System"
+  },
+  "database": {
+    "engine": "mysql",
+    "name": "clinic_management_system",
+    "charset": "utf8mb4",
+    "collation": "utf8mb4_unicode_ci"
+  },
+  "authentication": {
+    "method": "JWT",
+    "access_token_lifetime_hours": 5,
+    "refresh_token_lifetime_days": 1,
+    "password_reset_timeout_hours": 1,
+    "min_password_length": 8
+  },
+  "roles": [
+    "ADMIN",
+    "DOCTOR",
+    "STAFF",
+    "PATIENT"
+  ],
+  "appointment_statuses": [
+    "PENDING",
+    "APPROVED",
+    "CANCELLED",
+    "COMPLETED"
+  ],
+  "payment_statuses": [
+    "PENDING",
+    "PAID",
+    "CANCELLED"
+  ],
+  "payment_methods": [
+    "CASH",
+    "CARD",
+    "UPI",
+    "INSURANCE"
+  ],
+  "gender_choices": [
+    "M",
+    "F",
+    "O"
+  ],
+  "blood_groups": [
+    "A+",
+    "A-",
+    "B+",
+    "B-",
+    "O+",
+    "O-",
+    "AB+",
+    "AB-"
+  ],
+  "weekdays": [
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT",
+    "SUN"
+  ],
+  "query_statuses": [
+    "OPEN",
+    "IN_PROGRESS",
+    "RESOLVED",
+    "CLOSED"
+  ],
+  "departments": [
+    {
+      "name": "Cardiology",
+      "description": "Heart and cardiovascular diseases"
+    },
+    {
+      "name": "Neurology",
+      "description": "Brain and nervous system"
+    },
+    {
+      "name": "Orthopedics",
+      "description": "Bones, joints, and muscles"
+    },
+    {
+      "name": "Dermatology",
+      "description": "Skin and skin diseases"
+    },
+    {
+      "name": "General Medicine",
+      "description": "General medical care"
+    },
+    {
+      "name": "Pediatrics",
+      "description": "Children's health"
+    },
+    {
+      "name": "Gynecology",
+      "description": "Women's health"
+    },
+    {
+      "name": "ENT",
+      "description": "Ear, Nose, and Throat"
+    }
+  ],
+  "pagination": {
+    "page_size": 10
+  },
+  "email": {
+    "backend": "smtp",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "use_tls": true
+  },
+  "cors": {
+    "allow_credentials": true
+  }
+}
