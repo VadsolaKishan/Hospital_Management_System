@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           try {
             const freshUser = await authService.getProfile();
             setUser(freshUser);
-            localStorage.setItem('user', JSON.stringify(freshUser));
+            sessionStorage.setItem('user', JSON.stringify(freshUser));
           } catch {
             // Token might be expired, will be handled by interceptor
           }
@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const freshUser = await authService.getProfile();
       setUser(freshUser);
-      localStorage.setItem('user', JSON.stringify(freshUser));
+      sessionStorage.setItem('user', JSON.stringify(freshUser));
     } catch (error) {
       console.error('Failed to refresh user:', error);
     }

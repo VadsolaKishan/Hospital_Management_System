@@ -94,24 +94,24 @@ export const authService = {
   },
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('user');
   },
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('access_token');
+    return !!sessionStorage.getItem('access_token');
   },
 
   getCurrentUser(): User | null {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   },
 
   setAuthData(data: AuthResponse): void {
-    localStorage.setItem('access_token', data.tokens.access);
-    localStorage.setItem('refresh_token', data.tokens.refresh);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    sessionStorage.setItem('access_token', data.tokens.access);
+    sessionStorage.setItem('refresh_token', data.tokens.refresh);
+    sessionStorage.setItem('user', JSON.stringify(data.user));
   },
 
   async forgotPassword(email: string): Promise<{ message: string }> {
