@@ -185,4 +185,4 @@ PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = config(
 
 # Frontend URL for password reset link
 FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:3000")
-SECURE_CROSS_ORIGIN_OPENER_POLICY = "unsafe-none"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
