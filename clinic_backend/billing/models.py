@@ -1,9 +1,11 @@
 from django.db import models
 from appointments.models import Appointment
 from patients.models import Patient
+from clinic_backend.fields import EncryptedTextField
 
 
 class Billing(models.Model):
+
     PAYMENT_STATUS_CHOICES = [
         ("PENDING", "Pending"),
         ("PAID", "Paid"),
@@ -49,8 +51,9 @@ class Billing(models.Model):
         max_length=10, choices=PAYMENT_METHOD_CHOICES, blank=True, null=True
     )
     invoice_number = models.CharField(max_length=50, unique=True)
-    notes = models.TextField(blank=True, null=True)
+    notes = EncryptedTextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

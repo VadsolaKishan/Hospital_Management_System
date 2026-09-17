@@ -9,6 +9,7 @@ export const WardList = () => {
     const queryClient = useQueryClient();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [deletingWardId, setDeletingWardId] = useState<number | null>(null);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -52,7 +53,12 @@ export const WardList = () => {
         mutationFn: bedService.deleteWard,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['wards'] });
+            setDeletingWardId(null);
             toast({ title: 'Success', description: 'Ward deleted successfully' });
+        },
+        onError: (err: any) => {
+            setDeletingWardId(null);
+            toast({ title: 'Error', description: err.response?.data?.error || err.response?.data?.detail || 'Failed to delete ward. It may contain beds with patient history.', variant: 'destructive' });
         }
     });
 
@@ -164,6 +170,38 @@ export const WardList = () => {
                 </div>
             )}
 
+            {deletingWardId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+                    <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm animate-scale-in">
+                        <h3 className="text-xl font-bold mb-2 text-red-600">Delete Ward</h3>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            Are you sure you want to delete this ward? All beds inside will be deleted. This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setDeletingWardId(null)}
+                                className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (deletingWardId) {
+                                        deleteMutation.mutate(deletingWardId);
+                                    }
+                                }}
+                                disabled={deleteMutation.isPending}
+                                className="bg-red-600 text-white px-4 py-2 text-sm font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+                            >
+                                {deleteMutation.isPending && <ButtonLoader />} Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white border rounded-xl overflow-hidden shadow-sm overflow-x-auto">
                 <table className="w-full text-left">
                     <thead className="bg-slate-50 border-b">
@@ -197,11 +235,7 @@ export const WardList = () => {
                                         <Edit2 className="h-4 w-4" />
                                     </button>
                                     <button
-                                        onClick={() => {
-                                            if (confirm('Are you sure you want to delete this ward? All beds inside will be deleted.')) {
-                                                deleteMutation.mutate(ward.id);
-                                            }
-                                        }}
+                                        onClick={() => setDeletingWardId(ward.id)}
                                         className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                         <Trash2 className="h-4 w-4" />

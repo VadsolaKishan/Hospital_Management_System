@@ -2,6 +2,7 @@ from django.db import models
 from appointments.models import Appointment
 from doctors.models import Doctor
 from patients.models import Patient
+from clinic_backend.fields import EncryptedTextField
 
 
 class Prescription(models.Model):
@@ -14,9 +15,10 @@ class Prescription(models.Model):
     doctor = models.ForeignKey(
         Doctor, on_delete=models.CASCADE, related_name="prescriptions"
     )
-    diagnosis = models.TextField()
-    medications = models.TextField()
-    instructions = models.TextField(blank=True, null=True)
+    diagnosis = EncryptedTextField()
+    medications = EncryptedTextField()
+    instructions = EncryptedTextField(blank=True, null=True)
+
     follow_up_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

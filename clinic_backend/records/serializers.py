@@ -83,15 +83,28 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         return billing.invoice_number if billing else None
 
     def validate(self, data):
-        # Check for existing prescription on create only
+        request = self.context.get("request")
+
+        # On create: ensure the requesting doctor owns the appointment
         if not self.instance:
             appointment = data.get("appointment")
+
+            # Check for existing prescription
             if appointment and appointment.prescriptions.exists():
                 raise serializers.ValidationError(
                     {
                         "appointment": "A prescription already exists for this appointment."
                     }
                 )
+
+            # Ensure the doctor creating the prescription is the one on the appointment
+            if request and request.user.role == "DOCTOR" and appointment:
+                if appointment.doctor.user != request.user:
+                    raise serializers.ValidationError(
+                        {
+                            "appointment": "You can only create prescriptions for your own appointments."
+                        }
+                    )
 
         if data.get("bed_required"):
             if not data.get("expected_bed_days") or data.get("expected_bed_days") <= 0:

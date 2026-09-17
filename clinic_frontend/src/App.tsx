@@ -37,6 +37,7 @@ import { LabTestTypeList } from "@/components/laboratory/LabTestTypeList";
 import { MyLabReports } from "@/components/laboratory/MyLabReports";
 import { PageLoader } from "@/components/common/Loader";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
 import { doctorService } from "@/services/doctorService";
 import { patientService } from "@/services/patientService";
 
@@ -169,7 +170,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -1,4 +1,5 @@
 import api from './api';
+import { tokenStore } from '../utils/tokenStore';
 
 export interface User {
   id: number;
@@ -33,7 +34,6 @@ export interface AuthResponse {
   user: User;
   tokens: {
     access: string;
-    refresh: string;
   };
 }
 
@@ -93,25 +93,25 @@ export const authService = {
     await api.post(`/accounts/users/${userId}/activate_user/`);
   },
 
-  logout(): void {
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('user');
+  async initCsrf(): Promise<void> {
+    await api.get('/accounts/csrf/');
+  },
+
+  async logout(): Promise<void> {
+    try {
+      await api.post('/accounts/users/logout/');
+    } catch (e) {
+      // Ignore error if logout fails (e.g. network issue), we still clear local state
+    }
+    tokenStore.clearToken();
   },
 
   isAuthenticated(): boolean {
-    return !!sessionStorage.getItem('access_token');
-  },
-
-  getCurrentUser(): User | null {
-    const userStr = sessionStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    return !!tokenStore.getToken();
   },
 
   setAuthData(data: AuthResponse): void {
-    sessionStorage.setItem('access_token', data.tokens.access);
-    sessionStorage.setItem('refresh_token', data.tokens.refresh);
-    sessionStorage.setItem('user', JSON.stringify(data.user));
+    tokenStore.setToken(data.tokens.access);
   },
 
   async forgotPassword(email: string): Promise<{ message: string }> {

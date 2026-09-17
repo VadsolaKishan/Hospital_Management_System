@@ -31,6 +31,12 @@ class DoctorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Doctor.objects.select_related("user", "department")
         return queryset
+    def perform_destroy(self, instance):
+        user = instance.user
+        if user:
+            user.delete()
+        else:
+            instance.delete()
 
     @action(detail=False, methods=["get"])
     def available_doctors(self, request):

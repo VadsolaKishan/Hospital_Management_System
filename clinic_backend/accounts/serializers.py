@@ -1,12 +1,12 @@
 # accounts/serializers.py
 
 from rest_framework import serializers
+from django.contrib.auth import password_validation
 from .models import User, PasswordResetToken
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)
-    full_name = serializers.CharField(read_only=True)
+    password = serializers.CharField(write_only=True, required=False, min_length=10)
     full_name = serializers.CharField(read_only=True)
     patient_id = serializers.SerializerMethodField()
     doctor_id = serializers.SerializerMethodField()
@@ -28,6 +28,11 @@ class UserSerializer(serializers.ModelSerializer):
             "doctor_id",
         ]
         read_only_fields = ["id", "created_at"]
+
+    def validate_password(self, value):
+        if value:
+            password_validation.validate_password(value)
+        return value
 
     def get_patient_id(self, obj):
         if hasattr(obj, "patient_profile"):
@@ -58,7 +63,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True, min_length=10)
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -75,6 +80,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
             raise serializers.ValidationError({"password": "Passwords do not match"})
+        password_validation.validate_password(attrs["password"])
         return attrs
 
     def create(self, validated_data):
@@ -114,7 +120,7 @@ class VerifyResetTokenSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     token = serializers.CharField()
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True, min_length=10)
     confirm_password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
@@ -129,4 +135,6 @@ class ResetPasswordSerializer(serializers.Serializer):
         except PasswordResetToken.DoesNotExist:
             raise serializers.ValidationError("Invalid token")
 
+        password_validation.validate_password(attrs["password"])
         return attrs
+

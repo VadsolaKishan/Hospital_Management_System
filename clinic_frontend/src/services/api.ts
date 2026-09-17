@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { tokenStore } from '../utils/tokenStore';
 
 // Get the API base URL based on the current hostname
 // If on localhost, use localhost:8000
@@ -21,6 +22,9 @@ const API_BASE_URL = getAPIBaseURL();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -29,7 +33,7 @@ const api = axios.create({
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('access_token');
+    const token = tokenStore.getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -51,24 +55,27 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = sessionStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/token/refresh/`, {
-            refresh: refreshToken,
-          });
+        const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop()?.split(';').shift();
+          return undefined;
+        };
+        const csrfToken = getCookie('csrftoken');
 
-          const { access } = response.data;
-          sessionStorage.setItem('access_token', access);
+        const response = await axios.post(`${API_BASE_URL}/accounts/users/token/refresh/`, {}, {
+            withCredentials: true,
+            headers: csrfToken ? { 'X-CSRFToken': csrfToken } : {}
+        });
 
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          return api(originalRequest);
-        }
+        const { access } = response.data;
+        tokenStore.setToken(access);
+
+        originalRequest.headers.Authorization = `Bearer ${access}`;
+        return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('refresh_token');
-        sessionStorage.removeItem('user');
-        window.location.href = '/login';
+        // Refresh failed, clear token and return error. React Router (PrivateRoute) will handle redirects.
+        tokenStore.clearToken();
         return Promise.reject(refreshError);
       }
     }

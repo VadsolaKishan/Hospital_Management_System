@@ -66,7 +66,7 @@ export const PatientForm = ({ initialData, onSuccess, onCancel }: PatientFormPro
       if (!formData.email) newErrors.email = 'Email is required';
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email';
       if (!formData.password) newErrors.password = 'Password is required';
-      else if (formData.password.length < 8) newErrors.password = 'Min 8 characters';
+      else if (formData.password.length < 10) newErrors.password = 'Min 10 characters';
       if (formData.password !== formData.confirm_password) newErrors.confirm_password = 'Passwords do not match';
     }
 
@@ -129,9 +129,24 @@ export const PatientForm = ({ initialData, onSuccess, onCancel }: PatientFormPro
           const errorData = authError.response?.data;
           let authMsg = 'Failed to create user account.';
           if (errorData) {
-            if (typeof errorData === 'string') authMsg = errorData;
-            else if (errorData.email) authMsg = `Email: ${errorData.email[0]}`;
-            else if (errorData.message) authMsg = errorData.message;
+            if (typeof errorData === 'string') {
+              authMsg = errorData;
+            } else {
+              const msgs = [];
+              for (const [key, val] of Object.entries(errorData)) {
+                const formattedKey = key === 'non_field_errors' 
+                  ? 'Error' 
+                  : key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                  
+                if (Array.isArray(val) && val.length > 0) {
+                  msgs.push(`${formattedKey}: ${val[0]}`);
+                } else if (typeof val === 'string') {
+                  msgs.push(`${formattedKey}: ${val}`);
+                }
+              }
+              if (msgs.length > 0) authMsg = msgs.join(' | ');
+              else if (errorData.message) authMsg = errorData.message;
+            }
           }
           toast({
             variant: 'destructive',

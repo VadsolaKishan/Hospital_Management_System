@@ -16,7 +16,7 @@ interface AuthContextType {
     phone: string;
     role: string;
   }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -37,17 +37,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const storedUser = authService.getCurrentUser();
-        if (storedUser && authService.isAuthenticated()) {
-          setUser(storedUser);
-          // Optionally refresh user data from server
-          try {
-            const freshUser = await authService.getProfile();
-            setUser(freshUser);
-            sessionStorage.setItem('user', JSON.stringify(freshUser));
-          } catch {
-            // Token might be expired, will be handled by interceptor
-          }
+        await authService.initCsrf();
+        // Trigger a profile fetch to initialize user state and trigger interceptor refresh if needed
+        try {
+          const freshUser = await authService.getProfile();
+          setUser(freshUser);
+        } catch {
+          // Token might be expired or user not logged in
+          setUser(null);
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
@@ -85,8 +82,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(response.user);
   };
 
-  const logout = () => {
-    authService.logout();
+  const logout = async () => {
+    await authService.logout();
     setUser(null);
   };
 
@@ -94,9 +91,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const freshUser = await authService.getProfile();
       setUser(freshUser);
-      sessionStorage.setItem('user', JSON.stringify(freshUser));
     } catch (error) {
       console.error('Failed to refresh user:', error);
+      setUser(null);
     }
   };
 

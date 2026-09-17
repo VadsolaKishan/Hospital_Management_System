@@ -1,9 +1,10 @@
 from django.db import models
 from django.conf import settings
-from cloudinary.models import CloudinaryField
 from appointments.models import Appointment
 from doctors.models import Doctor
 from patients.models import Patient
+from clinic_backend.fields import EncryptedTextField
+
 
 
 class LabTestType(models.Model):
@@ -56,9 +57,12 @@ class LabReport(models.Model):
     lab_request = models.OneToOneField(
         LabRequest, on_delete=models.CASCADE, related_name="report"
     )
-    report_file = CloudinaryField("lab_report", resource_type="image", folder="lab_reports")
-    notes = models.TextField(blank=True, default="")
+    report_file = models.FileField(
+        upload_to="lab_reports", max_length=255, verbose_name="lab_report"
+    )
+    notes = EncryptedTextField(blank=True, default="")
     technician = models.ForeignKey(
+
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,

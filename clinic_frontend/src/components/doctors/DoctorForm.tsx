@@ -44,7 +44,7 @@ export const DoctorForm = ({ departments, onSuccess, onCancel }: DoctorFormProps
     if (!formData.phone.trim()) newErrors.phone = 'Phone is required';
     
     if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    else if (formData.password.length < 10) newErrors.password = 'Password must be at least 10 characters';
     
     if (formData.password !== formData.confirm_password) newErrors.confirm_password = 'Passwords do not match';
     
@@ -103,31 +103,29 @@ export const DoctorForm = ({ departments, onSuccess, onCancel }: DoctorFormProps
       });
       onSuccess();
     } catch (error: any) {
-       let errorMessage = 'Failed to create doctor account';
+      const errorData = error.response?.data;
+      let errorMessage = 'Failed to create doctor account';
 
-      if (error.response?.data) {
-        const data = error.response.data;
-        if (typeof data === 'string') {
-          errorMessage = data;
-        } else if (data.error) {
-          errorMessage = data.error;
-        } else if (data.detail) {
-          errorMessage = data.detail;
-        } else if (data.message) {
-          errorMessage = data.message;
-        } else if (data.non_field_errors?.[0]) {
-          errorMessage = data.non_field_errors[0];
+      if (errorData) {
+        if (typeof errorData === 'string') {
+          errorMessage = errorData;
         } else {
-          // Flatten first error found
-           for (const [key, value] of Object.entries(data)) {
-            if (Array.isArray(value) && value.length > 0) {
-              errorMessage = `${key}: ${value[0]}`;
-              break;
-            } else if (typeof value === 'string') {
-              errorMessage = `${key}: ${value}`;
-              break;
+          const msgs = [];
+          for (const [key, val] of Object.entries(errorData)) {
+            const formattedKey = key === 'non_field_errors' 
+              ? 'Error' 
+              : key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+              
+            if (Array.isArray(val) && val.length > 0) {
+              msgs.push(`${formattedKey}: ${val[0]}`);
+            } else if (typeof val === 'string') {
+              msgs.push(`${formattedKey}: ${val}`);
             }
           }
+          if (msgs.length > 0) errorMessage = msgs.join(' | ');
+          else if (errorData.message) errorMessage = errorData.message;
+          else if (errorData.error) errorMessage = errorData.error;
+          else if (errorData.detail) errorMessage = errorData.detail;
         }
       } else if (error.message) {
         errorMessage = error.message;
@@ -209,7 +207,7 @@ export const DoctorForm = ({ departments, onSuccess, onCancel }: DoctorFormProps
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className={`input-field ${errors.password ? 'border-destructive' : ''}`}
-                  placeholder="Min 8 characters"
+                  placeholder="Min 10 characters"
                 />
                 {errors.password && <p className="mt-1 text-xs text-destructive">{errors.password}</p>}
               </div>

@@ -32,6 +32,13 @@ class Appointment(models.Model):
     class Meta:
         db_table = "appointments"
         ordering = ["-appointment_date", "-appointment_time"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["doctor", "appointment_date", "appointment_time"],
+                condition=models.Q(status__in=["PENDING", "APPROVED"]),
+                name="unique_active_appointment_slot"
+            )
+        ]
 
     def __str__(self):
         return f"{self.patient.user.full_name} with Dr. {self.doctor.user.full_name} on {self.appointment_date}"

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { bedService, Bed, Ward } from '@/services/bedService';
 import { patientService, Patient } from '@/services/patientService';
-import { Plus, Trash2, Filter, UserPlus, LogOut } from 'lucide-react';
+import { Plus, Trash2, Filter, UserPlus, LogOut, CheckCircle, Wrench, Sparkles } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { ButtonLoader } from '@/components/common/Loader';
 
@@ -27,6 +27,7 @@ export const BedList = () => {
     const [selectedBedForAdmission, setSelectedBedForAdmission] = useState<number | null>(null);
     const [selectedBedForDischarge, setSelectedBedForDischarge] = useState<number | null>(null);
     const [isDischargeOpen, setIsDischargeOpen] = useState(false);
+    const [deletingBedId, setDeletingBedId] = useState<number | null>(null);
 
     // Forms
     const [formData, setFormData] = useState({
@@ -81,7 +82,25 @@ export const BedList = () => {
         mutationFn: bedService.deleteBed,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['beds'] });
+            setDeletingBedId(null);
             toast({ title: 'Success', description: 'Bed deleted successfully' });
+        },
+        onError: (err: ApiError | unknown) => {
+            const error = err as ApiError;
+            setDeletingBedId(null);
+            toast({ title: 'Error', description: error.response?.data?.error || error.response?.data?.detail || 'Failed to delete bed. It may have patient history.', variant: 'destructive' });
+        }
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: number, data: any }) => bedService.updateBed(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['beds'] });
+            toast({ title: 'Success', description: 'Bed status updated successfully' });
+        },
+        onError: (err: ApiError | unknown) => {
+            const error = err as ApiError;
+            toast({ title: 'Error', description: error.response?.data?.detail || 'Failed to update bed status', variant: 'destructive' });
         }
     });
 
@@ -390,6 +409,39 @@ export const BedList = () => {
                 </div>
             )}
 
+            {/* Delete Bed Modal */}
+            {deletingBedId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+                    <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm animate-scale-in">
+                        <h3 className="text-xl font-bold mb-2 text-red-600">Delete Bed</h3>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            Are you sure you want to delete this bed? This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setDeletingBedId(null)}
+                                className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (deletingBedId) {
+                                        deleteMutation.mutate(deletingBedId);
+                                    }
+                                }}
+                                disabled={deleteMutation.isPending}
+                                className="bg-red-600 text-white px-4 py-2 text-sm font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+                            >
+                                {deleteMutation.isPending && <ButtonLoader />} Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white border rounded-xl overflow-hidden shadow-sm overflow-x-auto">
                 <table className="w-full text-left">
                     <thead className="bg-slate-50 border-b">
@@ -451,16 +503,38 @@ export const BedList = () => {
                                 </td>
                                 <td className="px-6 py-4 flex items-center gap-2">
                                     {bed.status === 'AVAILABLE' && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openAdmitModal(bed.id);
-                                            }}
-                                            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors tooltip"
-                                            title="Admit Patient"
-                                        >
-                                            <UserPlus className="h-4 w-4" />
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openAdmitModal(bed.id);
+                                                }}
+                                                className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors tooltip"
+                                                title="Admit Patient"
+                                            >
+                                                <UserPlus className="h-4 w-4" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    updateMutation.mutate({ id: bed.id, data: { status: 'CLEANING' } });
+                                                }}
+                                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors tooltip"
+                                                title="Send to Cleaning"
+                                            >
+                                                <Sparkles className="h-4 w-4" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    updateMutation.mutate({ id: bed.id, data: { status: 'MAINTENANCE' } });
+                                                }}
+                                                className="p-1.5 text-slate-500 hover:bg-slate-100 rounded transition-colors tooltip"
+                                                title="Send to Maintenance"
+                                            >
+                                                <Wrench className="h-4 w-4" />
+                                            </button>
+                                        </>
                                     )}
                                     {bed.status === 'OCCUPIED' && (
                                         <button
@@ -474,12 +548,22 @@ export const BedList = () => {
                                             <LogOut className="h-4 w-4" />
                                         </button>
                                     )}
+                                    {(bed.status === 'MAINTENANCE' || bed.status === 'CLEANING') && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                updateMutation.mutate({ id: bed.id, data: { status: 'AVAILABLE' } });
+                                            }}
+                                            className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors tooltip"
+                                            title="Mark as Available"
+                                        >
+                                            <CheckCircle className="h-4 w-4" />
+                                        </button>
+                                    )}
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            if (confirm('Delete bed?')) {
-                                                deleteMutation.mutate(bed.id);
-                                            }
+                                            setDeletingBedId(bed.id);
                                         }}
                                         className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                                     >

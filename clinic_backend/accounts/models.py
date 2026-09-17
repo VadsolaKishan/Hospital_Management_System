@@ -9,6 +9,8 @@ from django.contrib.auth.models import (
 from django.utils import timezone
 import uuid
 import secrets
+from clinic_backend.fields import EncryptedCharField
+
 
 
 class UserManager(BaseUserManager):
@@ -45,10 +47,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     ]
 
     email = models.EmailField(unique=True)
+
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15, blank=True, null=True)
+    phone = EncryptedCharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default="PATIENT")
+
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

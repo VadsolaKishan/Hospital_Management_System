@@ -5,7 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework.views import APIView
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+from django.contrib.auth import authenticate, password_validation
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -21,6 +28,7 @@ from .serializers import (
     VerifyResetTokenSerializer,
     ResetPasswordSerializer,
 )
+from .cookie_utils import set_auth_cookie, delete_auth_cookie
 from .permissions import IsAdmin
 from doctors.models import Doctor, Department
 import string
@@ -91,17 +99,17 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
-            return Response(
+            response = Response(
                 {
                     "message": "User registered successfully",
                     "user": UserSerializer(user).data,
                     "tokens": {
-                        "refresh": str(refresh),
                         "access": str(refresh.access_token),
                     },
                 },
                 status=status.HTTP_201_CREATED,
             )
+            return set_auth_cookie(response, refresh)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
@@ -125,17 +133,17 @@ class UserViewSet(viewsets.ModelViewSet):
                         )
 
                     refresh = RefreshToken.for_user(user)
-                    return Response(
+                    response = Response(
                         {
                             "message": "Login successful",
                             "user": UserSerializer(user).data,
                             "tokens": {
-                                "refresh": str(refresh),
                                 "access": str(refresh.access_token),
                             },
                         },
                         status=status.HTTP_200_OK,
                     )
+                    return set_auth_cookie(response, refresh)
                 else:
                     return Response(
                         {"error": "Invalid credentials"},
@@ -213,17 +221,17 @@ class UserViewSet(viewsets.ModelViewSet):
                 )
 
             refresh = RefreshToken.for_user(user)
-            return Response(
+            response = Response(
                 {
                     "message": "Login successful",
                     "user": UserSerializer(user).data,
                     "tokens": {
-                        "refresh": str(refresh),
                         "access": str(refresh.access_token),
                     },
                 },
                 status=status.HTTP_200_OK,
             )
+            return set_auth_cookie(response, refresh)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -249,7 +257,15 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if len(password) < 8:
             return Response(
-                {"error": "Password must be at least 8 characters long"},
+                {"non_field_errors": ["Password must be at least 8 characters long"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            password_validation.validate_password(password)
+        except ValidationError as e:
+            return Response(
+                {"non_field_errors": list(e.messages)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -466,3 +482,42 @@ Hospital Management System
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CookieTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get("refresh_token")
+        if not refresh_token:
+            return Response({"error": "Refresh token not found"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Inject refresh token into data for serializer
+        request.data["refresh"] = refresh_token
+        try:
+            response = super().post(request, *args, **kwargs)
+            # Response data has both access and new refresh token (if ROTATE_REFRESH_TOKENS=True)
+            if "refresh" in response.data:
+                refresh_token = response.data.pop("refresh")
+                response = set_auth_cookie(response, refresh_token)
+            return response
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        refresh_token = request.COOKIES.get("refresh_token")
+        response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except Exception:
+                pass
+        return delete_auth_cookie(response)
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class CSRFGeneratorView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response({"csrfToken": get_token(request)})

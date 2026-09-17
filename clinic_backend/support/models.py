@@ -1,5 +1,7 @@
 from django.db import models
 from accounts.models import User
+from clinic_backend.fields import EncryptedTextField
+
 
 
 class Notification(models.Model):
@@ -29,10 +31,11 @@ class Query(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="queries")
     subject = models.CharField(max_length=200)
-    message = models.TextField()
+    message = EncryptedTextField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="OPEN")
-    admin_reply = models.TextField(blank=True, null=True)
+    admin_reply = EncryptedTextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

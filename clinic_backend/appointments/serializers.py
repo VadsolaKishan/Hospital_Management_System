@@ -118,3 +118,24 @@ class AppointmentSerializer(serializers.ModelSerializer):
             return None
         except:
             return None
+
+    def validate(self, data):
+        doctor = data.get("doctor", self.instance.doctor if self.instance else None)
+        date = data.get("appointment_date", self.instance.appointment_date if self.instance else None)
+        time = data.get("appointment_time", self.instance.appointment_time if self.instance else None)
+        status = data.get("status", self.instance.status if self.instance else "PENDING")
+
+        if status in ["PENDING", "APPROVED"] and doctor and date and time:
+            qs = Appointment.objects.filter(
+                doctor=doctor,
+                appointment_date=date,
+                appointment_time=time,
+                status__in=["PENDING", "APPROVED"]
+            )
+            if self.instance:
+                qs = qs.exclude(id=self.instance.id)
+            if qs.exists():
+                raise serializers.ValidationError(
+                    {"non_field_errors": ["This time slot is already booked for the selected doctor."]}
+                )
+        return data

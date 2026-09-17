@@ -198,7 +198,7 @@ export const BillingDetail = () => {
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-muted-foreground">Payment Method</p>
                             <div className="p-3 rounded-lg border border-border bg-background text-foreground">
-                                {PAYMENT_METHODS.find(m => m.value === bill.payment_method)?.label || bill.payment_method}
+                                {PAYMENT_METHODS.find(m => m.value === bill.payment_method)?.label || bill.payment_method || 'Not Paid'}
                             </div>
                         </div>
                         <div className="space-y-2">

@@ -5,6 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Prescription
 from .serializers import PrescriptionSerializer
 from support.models import Notification
+from accounts.permissions import (
+    IsDoctor,
+    IsPrescriptionOwnerDoctor,
+)
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
@@ -22,28 +26,39 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         )
 
     def get_permissions(self):
-        if self.action in ["create", "update", "partial_update", "destroy"]:
-            from accounts.permissions import IsDoctor
-
-            return [IsDoctor()]  # Only doctors can write/modify prescriptions
+        """
+        - create: only Doctors
+        - update / partial_update / destroy: only the doctor who owns the
+          prescription (IsPrescriptionOwnerDoctor includes Admin/Staff bypass)
+        - list / retrieve / my_prescriptions / patient_history: any
+          authenticated user (queryset handles role filtering)
+        """
+        if self.action == "create":
+            return [IsDoctor()]
+        if self.action in ["update", "partial_update", "destroy"]:
+            return [IsDoctor(), IsPrescriptionOwnerDoctor()]
         return [IsAuthenticated()]
 
     def get_queryset(self):
+        """
+        Queryset filtering — prevents URL manipulation.
+
+        ADMIN / STAFF  → all prescriptions
+        DOCTOR         → only prescriptions they authored
+        PATIENT        → only their own prescriptions
+        """
         user = self.request.user
+        base = Prescription.objects.all().select_related(
+            "patient__user", "doctor__user", "appointment"
+        )
+
         if user.role in ["ADMIN", "STAFF"]:
-            return Prescription.objects.all().select_related(
-                "patient__user", "doctor__user", "appointment"
-            )
+            return base
         elif user.role == "DOCTOR":
-            # Doctor should see their own prescriptions, AND potentially others if querying for specific patient
-            # For list view, maybe just their own.
-            return Prescription.objects.all().select_related(
-                "patient__user", "doctor__user", "appointment"
-            )
+            # Doctor can only see prescriptions they themselves created
+            return base.filter(doctor__user=user)
         elif user.role == "PATIENT":
-            return Prescription.objects.filter(patient__user=user).select_related(
-                "patient__user", "doctor__user", "appointment"
-            )
+            return base.filter(patient__user=user)
         return Prescription.objects.none()
 
     @action(detail=False, methods=["get"])
@@ -61,6 +76,25 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
             ) != str(patient_id):
                 return Response(
                     {"error": "You can only view your own history"}, status=403
+                )
+
+        elif request.user.role == "DOCTOR":
+            # Doctor can only view history of patients they have treated
+            from appointments.models import Appointment
+
+            if not hasattr(request.user, "doctor_profile"):
+                return Response(
+                    {"error": "Doctor profile not found"}, status=403
+                )
+            has_relationship = Appointment.objects.filter(
+                doctor=request.user.doctor_profile,
+                patient_id=patient_id,
+                status__in=["APPROVED", "VISITED"],
+            ).exists()
+            if not has_relationship:
+                return Response(
+                    {"error": "You do not have access to this patient's history"},
+                    status=403,
                 )
 
         paginator = self.pagination_class()

@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import User
+from clinic_backend.fields import EncryptedCharField, EncryptedTextField
 
 
 class Patient(models.Model):
@@ -23,10 +24,11 @@ class Patient(models.Model):
     blood_group = models.CharField(
         max_length=3, choices=BLOOD_GROUP_CHOICES, blank=True, null=True
     )
-    address = models.TextField(blank=True, null=True)
-    emergency_contact = models.CharField(max_length=15, blank=True, null=True)
-    medical_history = models.TextField(blank=True, null=True)
-    allergies = models.TextField(blank=True, null=True)
+    address = EncryptedTextField(blank=True, null=True)
+    emergency_contact = EncryptedCharField(max_length=255, blank=True, null=True)
+    medical_history = EncryptedTextField(blank=True, null=True)
+    allergies = EncryptedTextField(blank=True, null=True)
+
     uhid = models.CharField(
         max_length=20, unique=True, null=True, blank=True, editable=False
     )

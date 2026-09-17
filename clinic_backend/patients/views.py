@@ -4,7 +4,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Patient
 from .serializers import PatientSerializer
-from accounts.permissions import IsAdminOrStaff, IsPatient
+from accounts.permissions import (
+    IsAdminOrStaff,
+    IsPatientOwner,
+    IsDoctorOfPatient,
+)
 
 
 class PatientViewSet(viewsets.ModelViewSet):
@@ -12,15 +16,26 @@ class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
+        """
+        - list / retrieve: any authenticated user (queryset handles filtering)
+        - create / destroy: Admin or Staff only
+        - update / partial_update: Admin/Staff can edit any; Patients handled
+          via my_profile action. Object-level check added below.
+        """
         if self.action in ["list", "retrieve"]:
-            return [IsAuthenticated()]
-        elif self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsDoctorOfPatient()]
+        elif self.action in ["create", "destroy"]:
             return [IsAdminOrStaff()]
+        elif self.action in ["update", "partial_update"]:
+            # Admin/Staff may edit any patient; patients edit via my_profile.
+            # Object-level IsPatientOwner lets a patient edit only their own.
+            return [IsAuthenticated(), IsPatientOwner()]
         return [IsAuthenticated()]
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["user__first_name", "user__last_name", "user__phone", "uhid"]
+    search_fields = ["user__first_name", "user__last_name", "uhid"]
     ordering_fields = ["created_at", "user__first_name"]
+
     ordering = ["-created_at"]
 
     def create(self, request, *args, **kwargs):
@@ -40,7 +55,22 @@ class PatientViewSet(viewsets.ModelViewSet):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    def perform_destroy(self, instance):
+        user = instance.user
+        if user:
+            user.delete()
+        else:
+            instance.delete()
+
     def get_queryset(self):
+        """
+        Queryset filtering — the first line of defence.
+
+        ADMIN / STAFF  → all patients
+        PATIENT        → only their own profile
+        DOCTOR         → only patients with whom they share an APPROVED or
+                         VISITED appointment (prevents URL-guessing attacks)
+        """
         user = self.request.user
         queryset = Patient.objects.all().select_related("user")
 
@@ -53,28 +83,14 @@ class PatientViewSet(viewsets.ModelViewSet):
         elif user.role == "DOCTOR":
             if hasattr(user, "doctor_profile"):
                 doctor_id = user.doctor_profile.id
-                # Filter patients who have appointments with this doctor
-                return queryset.filter(appointments__doctor_id=doctor_id).distinct()
+                # Only patients with APPROVED or VISITED appointments
+                return queryset.filter(
+                    appointments__doctor_id=doctor_id,
+                    appointments__status__in=["APPROVED", "VISITED"],
+                ).distinct()
             return Patient.objects.none()
 
         return Patient.objects.none()
-
-    def retrieve(self, request, *args, **kwargs):
-        """Override retrieve to add access control for doctors"""
-        instance = self.get_object()
-
-        # Additional check for doctors
-        if request.user.role == "DOCTOR":
-            # Verify this patient is in the doctor's queryset
-            if not self.get_queryset().filter(id=instance.id).exists():
-                from rest_framework.exceptions import PermissionDenied
-
-                raise PermissionDenied(
-                    "You do not have access to this patient's records."
-                )
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
     @action(detail=False, methods=["get", "put", "patch"])
     def my_profile(self, request):

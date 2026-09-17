@@ -24,7 +24,7 @@ export const Login = () => {
         const height = 200;
         const baseline = height / 2;
 
-        let segments = [];
+        const segments = [];
         let x = 0;
 
         while (x < patternWidth) {
